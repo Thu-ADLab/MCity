@@ -62,7 +62,7 @@ class AVDecisionMakingModule(MRAVTemplateMcity):
             "safe_distance": (1.0, 0.2),  # 目前好像还没用
             "end_s_candidates": (5,20,30),
             "end_l_candidates": (-3.0, 0.5, 0, 0.5, 3.0),# (-0.8,0,0.8), # s,d采样生成横向轨迹 (-3.5, 0, 3.5), #
-            "end_v_candidates": tuple(i*20/3.6/7 for i in range(8)), # 改这一项的时候，要连着限速一起改了
+            "end_v_candidates": tuple(i*30/3.6/7 for i in range(8)), # 改这一项的时候，要连着限速一起改了
             "end_T_candidates": (2,4,8), # s_dot, T采样生成纵向轨迹
 
             "print_info": True,
