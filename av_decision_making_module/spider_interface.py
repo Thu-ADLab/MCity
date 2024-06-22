@@ -37,7 +37,7 @@ def extract_route(route_filename):
     route_pts = csp(ss)
 
     local_map = elm.RoutedLocalMap.from_centerlines(
-        [route_pts], lane_width=3.5, speed_limit=20.0)
+        [route_pts], lane_width=3.5, speed_limit=20.0/3.6)
     return local_map
 
 def wrap_observation(step_info:dict, route_filename=None):

@@ -7,8 +7,7 @@ matplotlib.use('Agg')
 
 import spider
 import spider.visualize as vis
-from spider.planner_zoo import LatticePlanner, FallbackPlanner
-from spider.planner_zoo import DummyPlanner
+from spider.planner_zoo.IDMPlanner import IDMPlanner
 
 from mrav.mcity_mr_av import (
     MRAVTemplateMcity,
@@ -27,26 +26,26 @@ class AVDecisionMakingModule(MRAVTemplateMcity):
         self.route_filename = '/app/av_decision_making_module/initial_information/route.csv'
         self.local_map = extract_route(self.route_filename)
 
-        self.start_planner = DummyPlanner({
-            "steps": 30,
-            "dt": 0.1,
-            "ego_veh_length": 5.0,
-            "ego_veh_width": 1.8,
-            "target_speed": 5/3.6,
-            "max_acceleration": 1.0,
-            "max_deceleration": 7.0,
-        })
+        # self.start_planner = DummyPlanner({
+        #     "steps": 30,
+        #     "dt": 0.1,
+        #     "ego_veh_length": 5.0,
+        #     "ego_veh_width": 1.8,
+        #     "target_speed": 5/3.6,
+        #     "max_acceleration": 1.0,
+        #     "max_deceleration": 7.0,
+        # })
 
-        self.fallback_planner = FallbackPlanner({
-            "steps": 30,
-            "dt": 0.1,
-            "ego_veh_length": 5.0,
-            "ego_veh_width": 1.8,
-            "min_TTC": 2.0,
-            "max_deceleration": 7.0,
-        })
+        # self.fallback_planner = FallbackPlanner({
+        #     "steps": 30,
+        #     "dt": 0.1,
+        #     "ego_veh_length": 5.0,
+        #     "ego_veh_width": 1.8,
+        #     "min_TTC": 2.0,
+        #     "max_deceleration": 7.0,
+        # })
 
-        self.planner = LatticePlanner({
+        self.planner = IDMPlanner({
             "steps": 40,
             "dt": 0.1,
             "ego_veh_length": 5.0,
@@ -57,25 +56,25 @@ class AVDecisionMakingModule(MRAVTemplateMcity):
             "max_deceleration": 7.0,
             "max_lateral_jerk": 1.0,
             "max_longitudinal_jerk": 1.0,
-            # "max_centripetal_acceleration" : 100,
-            "max_curvature": 2.0,
-            "safe_distance": (1.0, 0.2),  # 目前好像还没用
-            "end_s_candidates": (5,20,30),
-            "end_l_candidates": (-3.0, 0.5, 0, 0.5, 3.0),# (-0.8,0,0.8), # s,d采样生成横向轨迹 (-3.5, 0, 3.5), #
-            "end_v_candidates": tuple(i*20/3.6/7 for i in range(8)), # 改这一项的时候，要连着限速一起改了
-            "end_T_candidates": (2,4,8), # s_dot, T采样生成纵向轨迹
+            # # "max_centripetal_acceleration" : 100,
+            # "max_curvature": 2.0,
+            # "safe_distance": (1.0, 0.2),  # 目前好像还没用
+            # "end_s_candidates": (5,20,30),
+            # "end_l_candidates": (-3.0, 0.5, 0, 0.5, 3.0),# (-0.8,0,0.8), # s,d采样生成横向轨迹 (-3.5, 0, 3.5), #
+            # "end_v_candidates": tuple(i*20/3.6/7 for i in range(8)), # 改这一项的时候，要连着限速一起改了
+            # "end_T_candidates": (2,4,8), # s_dot, T采样生成纵向轨迹
 
-            "print_info": True,
+            # "print_info": True,
 
-            "constraint_flags": {
-                spider.CONSTRIANT_SPEED_UB,
-                spider.CONSTRIANT_SPEED_LB,
-                spider.CONSTRIANT_ACCELERATION,
-                spider.CONSTRIANT_DECELERATION,
-                spider.CONSTRIANT_CURVATURE,
-                spider.CONSTRIANT_LATERAL_JERK,
-                spider.CONSTRIANT_LONGITUDINAL_JERK
-            },
+            # "constraint_flags": {
+            #     spider.CONSTRIANT_SPEED_UB,
+            #     spider.CONSTRIANT_SPEED_LB,
+            #     spider.CONSTRIANT_ACCELERATION,
+            #     spider.CONSTRIANT_DECELERATION,
+            #     spider.CONSTRIANT_CURVATURE,
+            #     spider.CONSTRIANT_LATERAL_JERK,
+            #     spider.CONSTRIANT_LONGITUDINAL_JERK
+            # },
         })
         self.planner.set_local_map(self.local_map)
 
@@ -83,7 +82,7 @@ class AVDecisionMakingModule(MRAVTemplateMcity):
         from spider.utils.collision import BoxCollisionChecker
         self.last_trajectory = None
         self._replan_interval_count = 0
-        self.max_replan_interval = 20 # frames
+        self.max_replan_interval = 10 # frames
         self.collision_checker = BoxCollisionChecker(5.0, 1.8)
         ###################
 
@@ -117,10 +116,10 @@ class AVDecisionMakingModule(MRAVTemplateMcity):
 
         if self.trigger_replanning(tbox_list):
             # print('00')
-            if step_info['av_info']['speed_long'] < 0.5:
-                traj = self.start_planner.plan(*obs)
-            else:
-                traj = self.planner.plan(*obs)
+            # if step_info['av_info']['speed_long'] < 0.5:
+            #     traj = self.start_planner.plan(*obs)
+            # else:
+            traj = self.planner.plan(*obs)
             # print('11')
         else:
             traj = self.last_trajectory
