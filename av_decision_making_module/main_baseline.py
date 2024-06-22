@@ -40,6 +40,8 @@ class AVDecisionMakingModule(MRAVTemplateMcity):
         self.trajectory_index = 0
 
     def derive_planning_result(self, step_info):
+        # import pdb
+        # pdb.set_trace()
         """This function will be used to compute the planning results based on the observation from "step_info". In this example, we find the closest point in the predefined trajectory and return the next waypoint as the planning results."""
         # parse the step_info
         av_state = step_info["av_info"]
@@ -68,9 +70,15 @@ class AVDecisionMakingModule(MRAVTemplateMcity):
             ],
         }
         self.trajectory_index += 1
+        
+        print(step_info['av_info'])
+        print(planning_result)
         return planning_result
 
 
 # Create an instance of the AV decision-making module and run it
 av_decision_making_module = AVDecisionMakingModule()
 av_decision_making_module.run()
+
+
+

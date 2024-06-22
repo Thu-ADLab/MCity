@@ -7,7 +7,7 @@ services:
     restart: always
     networks:
       - terasim-bridge
-    image: "michigantrafficlab/mcity_av_challenge:test_env_a"
+    image: "dockerhub.timeweb.cloud/michigantrafficlab/mcity_av_challenge:test_env_a"
     volumes:
       - ./output/trajectory_data:/app/Driving-Intelligence-Test/output
     ports:
@@ -18,7 +18,7 @@ services:
     restart: always
     networks:
       - terasim-bridge
-    image: "michigantrafficlab/mcity_av_challenge:baseline_av"
+    image: "dockerhub.timeweb.cloud/michigantrafficlab/mcity_av_challenge:baseline_av"
     volumes:
       - ./av_decision_making_module:/app/av_decision_making_module
       - ./output/trajectory_data:/app/output/trajectory_data

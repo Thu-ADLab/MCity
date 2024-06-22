@@ -55,7 +55,8 @@ def make_video(net_file_path, traj_file_path, output_folder):
     )
     test_index = traj_file_path.split("/")[-2]
     output_path = os.path.join(output_folder, f"{test_index}.mp4")
-    a.save(output_path, writer=animation.FFMpegWriter(fps=10), dpi=300)
+    # a.save(output_path, writer=animation.FFMpegWriter(fps=10), dpi=300) #origin
+    a.save(output_path, writer=animation.FFMpegWriter(fps=20), dpi=150)
     plt.close(fig)
 
 
